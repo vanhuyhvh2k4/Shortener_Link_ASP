@@ -14,7 +14,7 @@ namespace Shortener_Link.Repository
             _context = context;
         }
 
-        public Link CreateLink(Link link)
+        public bool CreateLink(Link link)
         {
             var newLink = new Link()
             {
@@ -29,7 +29,18 @@ namespace Shortener_Link.Repository
 
             _context.Links.Add(newLink);
 
-            return newLink;
+            return Save();
+        }
+
+        public bool IsEndpointExists(string endpoint)
+        {
+            return _context.Links.Any(link => link.Endpoint.Trim() == endpoint.Trim());
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

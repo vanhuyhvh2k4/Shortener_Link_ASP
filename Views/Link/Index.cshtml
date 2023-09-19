@@ -1,3 +1,7 @@
-﻿<div>
-    <input type="text" placeholder="Enter a link"/>
-</div>
+﻿@model Shortener_Link.DTO.CreateLinkDTO;
+
+<form method="post" action="/">
+    <input type="text" placeholder="Enter a link" name="OriginalLink" autofocus required/>
+    <input type="text" placeholder="Enter a endpoint" name="Endpoint"/>
+    <button>Get Short Link</button>
+</form>
