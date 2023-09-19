@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Shortener_Link.Data;
+using Shortener_Link.Interface.Repository;
+using Shortener_Link.Repository;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(10, 4, 25))));
+
+builder.Services.AddScoped<ILinkRepository, LinkRepository>();
+
+// Register auto mapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Ignore Cycles
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 
