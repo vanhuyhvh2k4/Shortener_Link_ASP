@@ -32,6 +32,11 @@ namespace Shortener_Link.Repository
             return Save();
         }
 
+        public Link GetLinkByEndpoint(string endpoint)
+        {
+            return _context.Links.Where(link => link.Endpoint == endpoint.Trim()).FirstOrDefault();
+        }
+
         public bool IsEndpointExists(string endpoint)
         {
             return _context.Links.Any(link => link.Endpoint.Trim() == endpoint.Trim());

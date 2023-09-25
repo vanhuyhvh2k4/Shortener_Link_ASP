@@ -28,5 +28,18 @@ namespace Shortener_Link.Controllers
 
             return View("Index");
         }
+
+        [HttpGet("{endpoint}")]
+        public IActionResult RedirectLink([FromRoute] string endPoint)
+        {
+            var response = _linkService.RedirectLink(endPoint);
+
+            if (response.Status ==404)
+            {
+                return View();
+            }
+
+            return Redirect(response.Data);
+        }
     }
 }

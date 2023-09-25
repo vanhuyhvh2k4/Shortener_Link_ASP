@@ -78,5 +78,36 @@ namespace Shortener_Link.Services
                 };
             }
         }
+
+        public ResponseDTO<string> RedirectLink(string endpoint)
+        {
+            try
+            {
+                Link link = _linkRepository.GetLinkByEndpoint(endpoint);
+
+                if (link == null)
+                {
+                    return new ResponseDTO<string>
+                    {
+                        Status = 404,
+                        Message = "Not found link"
+                    };
+                }
+
+                return new ResponseDTO<string>
+                {
+                    Status = 200,
+                    Message = "Success",
+                    Data = link.OriginalLink
+                };
+            } catch (Exception ex)
+            {
+                return new ResponseDTO<string>
+                {
+                    Status = 500,
+                    Message = ex.Message
+                };
+            }
+        }
     }
 }

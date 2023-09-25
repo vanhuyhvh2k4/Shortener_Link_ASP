@@ -8,6 +8,8 @@ namespace Shortener_Link.Interface.Repository
 
         bool IsEndpointExists(string endpoint);
 
+        Link GetLinkByEndpoint(string endpoint);
+
         bool Save();
     }
 }
