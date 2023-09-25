@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QRCoder;
 using Shortener_Link.DTO;
 using Shortener_Link.Interface.Services;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Shortener_Link.Controllers
 {
@@ -40,6 +43,24 @@ namespace Shortener_Link.Controllers
             }
 
             return Redirect(response.Data);
+        }
+
+        [HttpGet("qrcode")]
+        public IActionResult GenerateQRcode()
+        {
+            using(MemoryStream ms = new MemoryStream())
+            {
+                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode("hello", QRCodeGenerator.ECCLevel.Q);
+                QRCode qRCode = new QRCode(qRCodeData);
+                using (Bitmap bitmap = qRCode.GetGraphic(20))
+                {
+                    bitmap.Save(ms, ImageFormat.Png);
+                    ViewBag.QRcode = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            return View();
         }
     }
 }

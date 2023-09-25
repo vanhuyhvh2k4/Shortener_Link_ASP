@@ -25,6 +25,8 @@ builder.Services.AddScoped<IEndpointUtilities, EndpointUtilities>();
 
 builder.Services.AddScoped<IUrlUtilities, UrlUtilities>();
 
+builder.Services.AddScoped<IQRcodeUtilities, QRcodeUtilities>();
+
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
