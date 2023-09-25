@@ -1,18 +1,145 @@
-html {
-  font-size: 14px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html,
+body {
+    width: 100%;
+    height: 100%;
+    font-size: 62.5%;
+    background-color: black;
+    padding: 12px;
 }
 
 body {
-  margin-bottom: 60px;
+    font-size: 1.6rem;
+    color: #fff;
+    font-weight: 500;
+    line-height: 2.2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.text-primary {
+    font-size: 6rem;
+    text-align: center;
+    font-weight: 800;
+    line-height: 8rem;
+    background: linear-gradient(90deg, #144EE3 -0.02%, #EB568E 18.86%, #A353AA 64.49%, #144EE3 100.67%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-sub {
+    color: #C9CED6;
+    text-align: center;
+    font-size: 1.6rem;
+    font-style: normal;
+    font-weight: 300;
+}
+
+.input-link {
+    display: flex;
+    width: 700px;
+    height: 76px;
+    padding: 20px 4px 20px 25px;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 48px;
+    border: 4px solid #353C4A;
+    background: #181E29;
+    gap: 12px;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+    &>i
+
+{
+    color: #C9CED6;
+}
+
+& > input {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: #fff;
+    height: 100%;
+    font-size: 1.9rem;
+    flex: 1;
+}
+
+& > button {
+    display: flex;
+    width: 178px;
+    padding: 20px 4px 20px 4px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 48px;
+    border: 1px solid #144EE3;
+    background: #144EE3;
+    box-shadow: 10px 9px 22px 0px rgba(20, 78, 227, 0.38);
+    color: #fff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    &:hover
+
+{
+    opacity: 0.8;
+}
+
+}
+}
+
+.optional-endpoint {
+    margin-top: 25px;
+    background-color: #181E29;
+    width: 700px;
+    border: 2px solid #353C4A;
+    border-radius: 48px;
+    & > input
+
+{
+    outline: none;
+    border: none;
+    background-color: transparent;
+    width: 100%;
+    padding: 12px;
+    color: #fff;
+}
+
+}
+
+.coppy-icon, .qr-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(28, 40, 63, 0.69);
+    cursor: pointer;
+    &:hover
+
+{
+    opacity: 0.8;
+}
+
+}
+
+
+.short-link {
+    width: 700px;
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    background-color: #353C4A;
+    padding: 12px 24px;
+    border-radius: 24px;
+    gap: 24px;
+    border: 1px solid #ccc;
+    & > section:first-child
+
+{
+    flex: 1;
+}
 }

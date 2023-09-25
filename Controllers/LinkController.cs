@@ -24,7 +24,9 @@ namespace Shortener_Link.Controllers
         {
             var response = _linkService.CreateShortLink(createLink);
 
-            return Ok(response);
+            ViewBag.Response = response;
+
+            return View("Index");
         }
     }
 }
