@@ -23,6 +23,8 @@ builder.Services.AddScoped<ILinkService, LinkService>();
 
 builder.Services.AddScoped<IEndpointUtilities, EndpointUtilities>();
 
+builder.Services.AddScoped<IUrlUtilities, UrlUtilities>();
+
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

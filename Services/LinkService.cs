@@ -11,14 +11,16 @@ namespace Shortener_Link.Services
     {
         private readonly ILinkRepository _linkRepository;
         private readonly IEndpointUtilities _endpointUtilities;
+        private readonly IUrlUtilities _urlUtilities;
         private readonly IMapper _mapper;
         private readonly string DOMAIN_NAME;
         private readonly int NUMBER_OF_ENDPOINT;
 
-        public LinkService(ILinkRepository linkRepository, IEndpointUtilities endpointUtilities, IMapper mapper, IConfiguration configuration)
+        public LinkService(ILinkRepository linkRepository, IEndpointUtilities endpointUtilities, IUrlUtilities urlUtilities, IMapper mapper, IConfiguration configuration)
         {
             _linkRepository = linkRepository;
             _endpointUtilities = endpointUtilities;
+            _urlUtilities = urlUtilities;
             _mapper = mapper;
             DOMAIN_NAME = configuration.GetSection("DOMAIN_NAME").Value!;
             NUMBER_OF_ENDPOINT = int.Parse(configuration.GetSection("NUMBER_OF_ENDPOINT").Value!);
@@ -28,6 +30,16 @@ namespace Shortener_Link.Services
         {
             try
             {
+                 bool isValidUrl = _urlUtilities.CheckUrlActive(createLink.OriginalLink);
+
+                if (!isValidUrl)
+                {
+                    return new ResponseDTO<GetLinkDTO>
+                    {
+                        Status = 400,
+                        Message = "The url you entered is not working, please try again"
+                    };
+                }
                 string endpoint = "";
 
                 if (String.IsNullOrEmpty(createLink.Endpoint))
@@ -43,7 +55,7 @@ namespace Shortener_Link.Services
                         return new ResponseDTO<GetLinkDTO>
                         {
                             Status = 409,
-                            Message = "Endpoint already exits"
+                            Message = "The endpoint you entered already exitst. Please try another endpoint or use random endpoint."
                         };
                     } else
                     {

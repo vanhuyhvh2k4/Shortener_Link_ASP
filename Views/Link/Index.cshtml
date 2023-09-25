@@ -25,11 +25,9 @@
 
 <body>
     <div>
-        @if (response?.Status == 409)
+        @if (response?.Status == 409 || response?.Status == 400)
         {
-            <div class="alert alert-info" role="alert">
-                The endpoint already exist. Please try another endpoint.
-            </div>
+            <div class="alert alert-info" role="alert">@response?.Message</div>
         }
         <h1 class="text-primary">Shorten Your Long Link</h1>
         <h2 class="text-sub">
