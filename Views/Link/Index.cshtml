@@ -139,6 +139,25 @@
             return isUrl;
         }
     </script>
+
+    @if(response?.Status == 200)
+    {
+        <script>
+            var oldArr = JSON.parse(sessionStorage.getItem("list"));
+            var object = {
+                originalLink: '@response?.Data.OriginalLink',
+                shortedLink: '@response?.Data.ShortedLink'
+            };
+                
+            if (!oldArr) {
+                var newArr = [object];
+                sessionStorage.setItem('list', JSON.stringify(newArr));
+            } else {
+                oldArr.push(object);
+                sessionStorage.setItem('list', JSON.stringify(oldArr));
+            }
+        </script>
+    }
 </body>
 
 </html>
