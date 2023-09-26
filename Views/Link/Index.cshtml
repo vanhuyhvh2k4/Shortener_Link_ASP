@@ -58,9 +58,25 @@
                             <i class="fa-solid fa-copy"></i>
                         </div>
                     </section>
-                    <section>
+                    <section class="qr-section">
                         <div class="qr-icon">
                             <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <div hidden class="qr-code">
+                            @if (response?.Status == 200)
+                            {
+                                using (MemoryStream ms = new MemoryStream())
+                                {
+                                    QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                                    QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(response?.Data.ShortedLink, QRCodeGenerator.ECCLevel.Q);
+                                    QRCode qRCode = new QRCode(qRCodeData);
+                                    using (Bitmap bitmap = qRCode.GetGraphic(20))
+                                    {
+                                        bitmap.Save(ms, ImageFormat.Png);
+                                    }
+                                    <img width="100px" height="100px" src="@($"data:image/png;base64,{Convert.ToBase64String(ms.ToArray())}")" alt="QR Code">
+                                }
+                            }
                         </div>
                     </section>
                     <section>
@@ -68,20 +84,6 @@
                     </section>
                 </div>
             </div>
-        }
-
-        @if (response?.Status == 200){
-            using (MemoryStream ms = new MemoryStream())
-            {
-                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(response?.Data.ShortedLink, QRCodeGenerator.ECCLevel.Q);
-                QRCode qRCode = new QRCode(qRCodeData);
-                using (Bitmap bitmap = qRCode.GetGraphic(20))
-                {
-                    bitmap.Save(ms, ImageFormat.Png);
-                }
-                <img width="100px" height="100px" src="@($"data:image/png;base64,{Convert.ToBase64String(ms.ToArray())}")" alt="QR Code">
-            }
         }
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -91,6 +93,18 @@
     <script>
         const inputElement = document.getElementById("input");
         const formElement = document.getElementById("form");
+        const qrBtnElement = document.querySelector(".qr-icon");
+        const qrcodeElement = document.querySelector(".qr-code");
+        var isClick = true;
+
+        qrBtnElement.addEventListener("click", () => {
+            if (isClick) {
+                qrcodeElement.hidden = false;
+            } else {
+                qrcodeElement.hidden = true;
+            }
+            isClick = !isClick;
+        });
 
         formElement.addEventListener("submit", (e) => {
             e.preventDefault();
