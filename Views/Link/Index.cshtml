@@ -1,163 +1,140 @@
 ﻿@model Shortener_Link.DTO.CreateLinkDTO;
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Home";
     var response = ViewBag.Response;
 }
+
 @using QRCoder;
 @using System.Drawing.Imaging;
 @using System.Drawing;
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <title>Document</title>
-</head>
-
-<body>
-    <div>
-        @if (response?.Status == 409 || response?.Status == 400)
-        {
-            <div class="alert alert-info" role="alert">@response?.Message</div>
-        }
-        <h1 class="text-primary">Shorten Your Long Link</h1>
-        <h2 class="text-sub">
-            Linkly is an efficient and easy-to-use URL shortening service that streamlines your online
-            experience.
-        </h2>
-        <form id="form" style="display: flex; flex-direction: column; align-items: center;" action="/" method="post">
-            <div class="input-link">
-                <i class="fa-solid fa-link"></i>
-                <input id="input" name="OriginalLink" autofocus required type="text" placeholder="Enter the link here" tabindex="1">
-                <button tabindex="3">Shorten Now!</button>
-            </div>
-            <div class="optional-endpoint">
-                <input name="Endpoint" type="text" placeholder="Enter your optional endpoint. Example: https://localhost/your-endpoint." tabindex="2" maxlength="20" minlength="6" pattern="[a-zA-Z0-9\s]*" title="Vui lòng không nhập ký tự đặc biệt">
-            </div>
-        </form>
-
-        @if (response?.Status == 200)
-        {
-            <div style="display: flex; justify-content: center;">
-                <div class="short-link">
-                    <section>
-                        <h3>@response?.Data.ShortedLink</h3>
-                    </section>
-                    <section>
-                        <div class="coppy-icon" onclick="CoppyToClipBoard('@response?.Data.ShortedLink')">
-                            <i class="fa-solid fa-copy"></i>
-                        </div>
-                    </section>
-                    <section class="qr-section">
-                        <div class="qr-icon">
-                            <i class="fa-solid fa-qrcode"></i>
-                        </div>
-                        <div hidden class="qr-code">
-                            @if (response?.Status == 200)
-                            {
-                                using (MemoryStream ms = new MemoryStream())
-                                {
-                                    QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-                                    QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(response?.Data.ShortedLink, QRCodeGenerator.ECCLevel.Q);
-                                    QRCode qRCode = new QRCode(qRCodeData);
-                                    using (Bitmap bitmap = qRCode.GetGraphic(20))
-                                    {
-                                        bitmap.Save(ms, ImageFormat.Png);
-                                    }
-                                    <img width="100px" height="100px" src="@($"data:image/png;base64,{Convert.ToBase64String(ms.ToArray())}")" alt="QR Code">
-                                }
-                            }
-                        </div>
-                    </section>
-                    <section>
-                        <a href="@response?.Data.ShortedLink" target="_blank">Go to link</a>
-                    </section>
-                </div>
-            </div>
-        }
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
-
-    <script>
-        const inputElement = document.getElementById("input");
-        const formElement = document.getElementById("form");
-        const qrBtnElement = document.querySelector(".qr-icon");
-        const qrcodeElement = document.querySelector(".qr-code");
-        var isClick = true;
-
-        qrBtnElement.addEventListener("click", () => {
-            if (isClick) {
-                qrcodeElement.hidden = false;
-            } else {
-                qrcodeElement.hidden = true;
-            }
-            isClick = !isClick;
-        });
-
-        formElement.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            var isValid = CheckUrl(inputElement.value);
-
-            if (!isValid) {
-                alert("Invalid url");
-            } else {
-                formElement.submit();
-            }
-        });
-
-    </script>
-
-    <script>
-        function CoppyToClipBoard(text) {
-            var textarea = document.createElement("textarea");
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-            alert("Coppied to clipboard");
-        }
-
-        function CheckUrl(url) {
-            var urlRegex = /^(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-
-            let isUrl = urlRegex.test(url.trim());
-
-            return isUrl;
-        }
-    </script>
-
-    @if(response?.Status == 200)
+<div id="app">
+    @if (response?.Status == 409 || response?.Status == 400)
     {
-        <script>
-            var oldArr = JSON.parse(sessionStorage.getItem("list"));
-            var object = {
-                originalLink: '@response?.Data.OriginalLink',
-                shortedLink: '@response?.Data.ShortedLink'
-            };
-                
-            if (!oldArr) {
-                var newArr = [object];
-                sessionStorage.setItem('list', JSON.stringify(newArr));
-            } else {
-                oldArr.push(object);
-                sessionStorage.setItem('list', JSON.stringify(oldArr));
-            }
-        </script>
+        <div class="alert alert-info" role="alert">@response?.Message</div>
     }
-</body>
+    <h1 class="text-primary">Shorten Your Long Link</h1>
+    <h2 class="text-sub">
+        Linkly is an efficient and easy-to-use URL shortening service that streamlines your online
+        experience.
+    </h2>
+    <form id="form" style="display: flex; flex-direction: column; align-items: center;" action="/" method="post">
+        <div class="input-link">
+            <i class="fa-solid fa-link"></i>
+            <input id="input" name="OriginalLink" autofocus required type="text" placeholder="Enter the link here" tabindex="1">
+            <button tabindex="3">Shorten Now!</button>
+        </div>
+        <div class="optional-endpoint">
+            <input name="Endpoint" type="text" placeholder="Enter your optional endpoint. Example: https://localhost/your-endpoint." tabindex="2" maxlength="20" minlength="6" pattern="[a-zA-Z0-9\s]*" title="Vui lòng không nhập ký tự đặc biệt">
+        </div>
+    </form>
 
-</html>
+    @if (response?.Status == 200)
+    {
+        <div style="display: flex; justify-content: center;">
+            <div class="short-link">
+                <section>
+                    <h3>@response?.Data.ShortedLink</h3>
+                </section>
+                <section>
+                    <div class="coppy-icon" onclick="CoppyToClipBoard('@response?.Data.ShortedLink')">
+                        <i class="fa-solid fa-copy"></i>
+                    </div>
+                </section>
+                <section class="qr-section">
+                    <div class="qr-icon">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                    <div hidden class="qr-code">
+                        @if (response?.Status == 200)
+                        {
+                            using (MemoryStream ms = new MemoryStream())
+                            {
+                                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(response?.Data.ShortedLink, QRCodeGenerator.ECCLevel.Q);
+                                QRCode qRCode = new QRCode(qRCodeData);
+                                using (Bitmap bitmap = qRCode.GetGraphic(20))
+                                {
+                                    bitmap.Save(ms, ImageFormat.Png);
+                                }
+                                <img width="100px" height="100px" src="@($"data:image/png;base64,{Convert.ToBase64String(ms.ToArray())}")" alt="QR Code">
+                            }
+                        }
+                    </div>
+                </section>
+                <section>
+                    <a href="@response?.Data.ShortedLink" target="_blank">Go to link</a>
+                </section>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    const inputElement = document.getElementById("input");
+    const formElement = document.getElementById("form");
+    const qrBtnElement = document.querySelector(".qr-icon");
+    const qrcodeElement = document.querySelector(".qr-code");
+    var isClick = true;
+
+    qrBtnElement.addEventListener("click", () => {
+        if (isClick) {
+            qrcodeElement.hidden = false;
+        } else {
+            qrcodeElement.hidden = true;
+        }
+        isClick = !isClick;
+    });
+
+    formElement.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        var isValid = CheckUrl(inputElement.value);
+
+        if (!isValid) {
+            alert("Invalid url");
+        } else {
+            formElement.submit();
+        }
+    });
+
+</script>
+
+<script>
+    function CoppyToClipBoard(text) {
+        var textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        alert("Coppied to clipboard");
+    }
+
+    function CheckUrl(url) {
+        var urlRegex = /^(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+
+        let isUrl = urlRegex.test(url.trim());
+
+        return isUrl;
+    }
+</script>
+
+@if (response?.Status == 200)
+{
+    <script>
+        var oldArr = JSON.parse(sessionStorage.getItem("list"));
+        var object = {
+            originalLink: '@response?.Data.OriginalLink',
+            shortedLink: '@response?.Data.ShortedLink'
+        };
+
+        if (!oldArr) {
+            var newArr = [object];
+            sessionStorage.setItem('list', JSON.stringify(newArr));
+        } else {
+            oldArr.push(object);
+            sessionStorage.setItem('list', JSON.stringify(oldArr));
+        }
+    </script>
+}
